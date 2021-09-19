@@ -56,6 +56,26 @@ describe "exceptions" do
     expect(output).to eq permitted_params(input, { param_1: Boolean })
   end
 
+  it "should return an array when a pemitted is array" do
+    input = { param_1: [1,2] }
+    expect(input).to eq permitted_params(input, { param_1: Array })
+  end
+
+  it "should return a hash when a pemitted is hash" do
+    input = { param_1: { a: 1 } }
+    expect(input).to eq permitted_params(input, { param_1: Hash })
+  end
+
+  it "should return a hash when a pemitted is hash" do
+    input = { param_1: { :a => 1 } }
+    expect(input).to eq permitted_params(input, { param_1: Hash })
+  end
+
+  it "should return a hash when a pemitted is hash" do
+    input = { param_1: { "a": 1 } }
+    expect(input).to eq permitted_params(input, { param_1: Hash })
+  end
+
   it "should remove a string when a pemitted is integer" do
     input = { param_1: "a string" }
     output = {}

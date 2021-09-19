@@ -4,7 +4,7 @@ module PermitParams
   end
   
   def permitted_params(params, permitted = {}, strong_validation = false)
-    return params if permitted == {}
+    return params if permitted.empty?
   
     params.select do |k,v| 
       permitted.keys.map(&:to_s).include?(k.to_s) && 

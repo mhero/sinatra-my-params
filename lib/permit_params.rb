@@ -1,7 +1,14 @@
 module PermitParams
-  def permitted_params(params, permitted)
+  class InvalidParameterError < StandardError
+    attr_accessor :param, :options
+  end
+
+  
+  def permitted_params(params, permitted, strong_validation = false)
     params.select do |k,v| 
-      permitted.keys.map(&:to_s).include?(k.to_s) && !v.nil? && coerce(v, permitted[k.to_sym])
+      permitted.keys.map(&:to_s).include?(k.to_s) && 
+        !v.nil? && 
+        coerce(v, permitted[k.to_sym], strong_validation)
     end
   end
 

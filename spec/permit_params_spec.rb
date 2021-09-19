@@ -38,6 +38,24 @@ describe "exceptions" do
     expect(input).to eq permitted_params(input, { param_1: Integer })
   end
 
+  it "should return an integer when a pemitted can be cast into integer" do
+    input = { param_1: "1" }
+    output = { param_1: 1 }
+    expect(input).to eq permitted_params(input, { param_1: Integer })
+  end
+
+  it "should return a false(boolean) when a pemitted is boolean" do
+    input = { param_1: "false" }
+    output = { param_1: "false" }
+    expect(output).to eq permitted_params(input, { param_1: Boolean })
+  end
+
+  it "should return a true(boolean) when a pemitted is boolean" do
+    input = { param_1: "true" }
+    output = { param_1: "true" }
+    expect(output).to eq permitted_params(input, { param_1: Boolean })
+  end
+
   it "should remove a string when a pemitted is integer" do
     input = { param_1: "a string" }
     output = {}

@@ -2,18 +2,20 @@ module PermitParams
   class InvalidParameterError < StandardError
     attr_accessor :param, :options
   end
-  
+
   def permitted_params(params, permitted = {}, strong_validation = false)
     return params if permitted.empty?
   
     params.select do |k,v| 
       permitted.keys.map(&:to_s).include?(k.to_s) && 
         !v.nil? && 
-        coerce(v, permitted[k.to_sym], strong_validation)
+        !coerce(v, permitted[k.to_sym], strong_validation).nil?
     end
   end
 
   private
+
+  Boolean = :boolean
 
   def coerce(param, type, strong = false, options = {})
     begin
@@ -27,15 +29,17 @@ module PermitParams
       return DateTime.parse(param) if type == DateTime
       return Array(param.split(options[:delimiter] || ",")) if type == Array
       return Hash[param.split(options[:delimiter] || ",").map{|c| c.split(options[:separator] || ":")}] if type == Hash
-      if [TrueClass, FalseClass, Boolean].include? type
-        coerced = /^(false|f|no|n|0)$/i === param.to_s ? false : /^(true|t|yes|y|1)$/i === param.to_s ? true : nil
-        raise ArgumentError if coerced.nil?
-        return coerced
-      end
+      return coerce_boolean(param) if [TrueClass, FalseClass, Boolean].include? type
       return nil
     rescue ArgumentError
       raise InvalidParameterError, "'#{param}' is not a valid #{type}" if strong
     end
+  end
+
+  def coerce_boolean(param)
+    coerced = /^(false|f|no|n|0)$/i === param.to_s ? false : /^(true|t|yes|y|1)$/i === param.to_s ? true : nil
+    raise ArgumentError if coerced.nil?
+    coerced
   end
 end
 

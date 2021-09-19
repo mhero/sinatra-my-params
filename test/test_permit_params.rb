@@ -7,8 +7,8 @@ class PermitParamsTest < Test::Unit::TestCase
   include PermitParams
 
   def test_pemit_string
-    input = { param_1: "hola" }
-    output = { param_1: "hola" }
+    input = { param_1: "a string" }
+    output = { param_1: "a string" }
     assert_equal output, permitted_params( input, { param_1: String } )
   end
 
@@ -19,7 +19,7 @@ class PermitParamsTest < Test::Unit::TestCase
   end
 
   def test_remove_integer
-    input = { param_1: "a"}
+    input = { param_1: "a string" }
     output = {}
     assert_equal output, permitted_params( input, { param_1: Integer } )
   end

@@ -24,10 +24,10 @@ class PermitParamsTest < Test::Unit::TestCase
     assert_equal output, permitted_params( input, { param_1: Integer } )
   end
 
-  describe 'Exception' do
+  describe 'exceptions' do
     describe 'raise' do
-      it 'should raise error when no parameters are specified' do
-        input = { param_1: "a"}
+      it 'should raise error when at least one param is invalid' do
+        input = { param_1: "a" }
         expect(permitted_params( input, { param_1: Integer }, true )).to raise_error InvalidParameterError
       end
     end

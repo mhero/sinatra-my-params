@@ -15,14 +15,27 @@ describe "exceptions" do
 
   it "should return a string when a pemitted is string" do
     input = { param_1: "a string" }
-    output = { param_1: "a string" }
-    expect(output).to eq permitted_params(input, { param_1: String })
+    expect(input).to eq permitted_params(input, { param_1: String })
+  end
+
+  it "should return a float when a pemitted is float" do
+    input = { param_1: 10.0 }
+    expect(input).to eq permitted_params(input, { param_1: Float })
+  end
+
+  it "should return a date when a pemitted is date" do
+    input = { param_1: Date.new }
+    expect(input).to eq permitted_params(input, { param_1: Date })
+  end
+
+  it "should return a time when a pemitted is time" do
+    input = { param_1: Time.new }
+    expect(input).to eq permitted_params(input, { param_1: Time })
   end
 
   it "should return an integer when a pemitted is integer" do
     input = { param_1: 1 }
-    output = { param_1: 1 }
-    expect(output).to eq permitted_params(input, { param_1: Integer })
+    expect(input).to eq permitted_params(input, { param_1: Integer })
   end
 
   it "should remove a string when a pemitted is integer" do
@@ -33,8 +46,7 @@ describe "exceptions" do
 
   it "should allow all params when no restriction is given" do
     input = { param_1: "a string" }
-    output = { param_1: "a string" }
-    expect(output).to eq permitted_params(input)
+    expect(input).to eq permitted_params(input)
   end
 end
 

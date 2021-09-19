@@ -6,11 +6,15 @@ module PermitParams
   def permitted_params(params, permitted = {}, strong_validation = false)
     return params if permitted.empty?
   
-    params.select do |k,v| 
-      permitted.keys.map(&:to_s).include?(k.to_s) && 
-        !v.nil? && 
-        !coerce(v, permitted[k.to_sym], strong_validation).nil?
+    coerced_params = Hash.new({})
+
+    params.each do |key, value|
+      if permitted.keys.map(&:to_s).include?(key.to_s) && !value.nil?
+        coerced = coerce(value, permitted[key.to_sym], strong_validation)
+        coerced_params[key] = coerced if !coerced.nil?
+      end
     end
+    coerced_params
   end
 
   private

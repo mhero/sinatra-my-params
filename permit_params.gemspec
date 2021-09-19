@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.authors = ["Marco Aviles"]
   s.date = %q{2021-09-19}
   s.description = %q{A simple sinatra params sanitizer}
-  s.email = %q{nick@quaran.to}
+  s.email = %q{gdmarav374@gmail.com}
   s.files = ["Rakefile", "lib/permit_params.rb", "bin/permit_params"]
   s.test_files = ["test/test_permit_params.rb"]
   s.homepage = %q{https://github.com/mhero/sinatra-my-params}

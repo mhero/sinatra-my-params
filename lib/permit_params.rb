@@ -2,9 +2,10 @@ module PermitParams
   class InvalidParameterError < StandardError
     attr_accessor :param, :options
   end
-
   
-  def permitted_params(params, permitted, strong_validation = false)
+  def permitted_params(params, permitted = {}, strong_validation = false)
+    return params if permitted == {}
+  
     params.select do |k,v| 
       permitted.keys.map(&:to_s).include?(k.to_s) && 
         !v.nil? && 
@@ -33,9 +34,7 @@ module PermitParams
       end
       return nil
     rescue ArgumentError
-      if strong
-        raise InvalidParameterError, "'#{param}' is not a valid #{type}"
-      end
+      raise InvalidParameterError, "'#{param}' is not a valid #{type}" if strong
     end
   end
 end

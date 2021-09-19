@@ -27,13 +27,21 @@ module PermitParams
       return Date.parse(param) if type == Date
       return Time.parse(param) if type == Time
       return DateTime.parse(param) if type == DateTime
-      return Array(param.split(options[:delimiter] || ",")) if type == Array
-      return Hash[param.split(options[:delimiter] || ",").map{|c| c.split(options[:separator] || ":")}] if type == Hash
+      return coerce_array(param) if type == Array
+      return coerce_hash(param) if type == Hash
       return coerce_boolean(param) if [TrueClass, FalseClass, Boolean].include? type
       return nil
     rescue ArgumentError
       raise InvalidParameterError, "'#{param}' is not a valid #{type}" if strong_validation
     end
+  end
+
+  def coerce_array(param)
+    Array(param.split(options[:delimiter] || ","))
+  end
+
+  def coerce_hash(param)
+    Hash[param.split(options[:delimiter] || ",").map{|c| c.split(options[:separator] || ":")}]
   end
 
   def coerce_boolean(param)

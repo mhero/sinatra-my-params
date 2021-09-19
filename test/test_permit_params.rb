@@ -1,7 +1,7 @@
-require 'test/unit'
-require 'permit_params'
-require 'rspec'
-require 'rack/test'
+require "test/unit"
+require "permit_params"
+require "rspec"
+require "rack/test"
 
 class PermitParamsTest < Test::Unit::TestCase
   include PermitParams
@@ -24,9 +24,9 @@ class PermitParamsTest < Test::Unit::TestCase
     assert_equal output, permitted_params( input, { param_1: Integer } )
   end
 
-  describe 'exceptions' do
-    describe 'raise' do
-      it 'should raise error when at least one param is invalid' do
+  describe "exceptions" do
+    describe "raise" do
+      it "should raise error when at least one param is invalid" do
         input = { param_1: "a" }
         expect(permitted_params( input, { param_1: Integer }, true )).to raise_error InvalidParameterError
       end

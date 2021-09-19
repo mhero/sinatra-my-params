@@ -17,7 +17,7 @@ module PermitParams
 
   Boolean = :boolean
 
-  def coerce(param, type, strong = false, options = {})
+  def coerce(param, type, strong_validation = false, options = {})
     begin
       return nil if param.nil?
       return param if (param.is_a?(type) rescue false)
@@ -32,7 +32,7 @@ module PermitParams
       return coerce_boolean(param) if [TrueClass, FalseClass, Boolean].include? type
       return nil
     rescue ArgumentError
-      raise InvalidParameterError, "'#{param}' is not a valid #{type}" if strong
+      raise InvalidParameterError, "'#{param}' is not a valid #{type}" if strong_validation
     end
   end
 

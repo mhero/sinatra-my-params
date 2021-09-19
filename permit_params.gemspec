@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name               = "sinatra-my-params"
-  s.version            = "0.0.2"
+  s.version            = "0.0.3"
   s.default_executable = "permit_params"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email = %q{nick@quaran.to}
   s.files = ["Rakefile", "lib/permit_params.rb", "bin/permit_params"]
   s.test_files = ["test/test_permit_params.rb"]
-  s.homepage = %q{http://rubygems.org/gems/sinatra-my-params}
+  s.homepage = %q{https://github.com/mhero/sinatra-my-params}
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.6.2}
   s.summary = %q{permit_params!}

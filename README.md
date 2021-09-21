@@ -8,7 +8,7 @@ permitted_params(params, permitted = {}, strong_validation = false)
 ```
 
 If strong_validation is set to true, method will rise an error; if not it will only ignore that param
-
+Parameters outside of permitted ones will be removed.
 
 ```ruby
 class Controller 
@@ -24,7 +24,19 @@ class Controller
 end
 ```
 
-Parameters outside of permitted will be removed
+# Permitted params
+  * Any
+  * Boolean
+  * Integer
+  * Float 
+  * String,
+  * Date
+  * Time
+  * DateTime
+  * Array
+  * Hash
+  * TrueClass 
+  * FalseClass
 
 All feedback is welcome. Super early stage
 

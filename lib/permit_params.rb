@@ -20,8 +20,11 @@ module PermitParams
   private
 
   Boolean = :boolean
+  Any = :any
 
   def coerce(param, type, strong_validation = false, options = {})
+    return param if type == Any
+
     begin
       return nil if param.nil?
       return param if (param.is_a?(type) rescue false)

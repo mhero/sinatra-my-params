@@ -6,6 +6,10 @@ require "rack/test"
 include PermitParams
 
 describe "exceptions" do
+  before do
+    class TestClass; end
+  end
+
   it "should raise error when at least one param is invalid" do
     input = { param_1: "a" }
     expect{
@@ -89,6 +93,15 @@ describe "exceptions" do
         hsh: Hash
       }
     )
+  end
+
+  it "returns the paramter without casting if Any" do
+    input = { param_1: "1" }
+    output = { param_1: "1" }
+    expect(output).to eq permitted_params(input, { param_1: Any })
+
+    input = { param_1: TestClass.new }
+    expect(input).to eq permitted_params(input, { param_1: Any })
   end
 
   it "should remove a string when a pemitted is integer" do

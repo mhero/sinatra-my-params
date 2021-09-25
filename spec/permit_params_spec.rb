@@ -85,7 +85,7 @@ describe 'exceptions' do
   end
 
   it 'should return a hash when a pemitted is hash' do
-    input = { param_1: { a: 1 } }
+    input = { param_1: { a: { b: 1 } } }
     expect(input).to eq permitted_params(input, { param_1: Hash })
   end
 

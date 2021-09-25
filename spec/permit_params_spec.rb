@@ -114,8 +114,15 @@ describe 'exceptions' do
     output = { param_1: '1' }
     expect(output).to eq permitted_params(input, { param_1: Any })
 
-    input = { param_1: TestClass.new }
-    expect(input).to eq permitted_params(input, { param_1: Any })
+    test_class = TestClass.new
+    input = { param_1: test_class }
+    output = { param_1: test_class }
+    expect(output).to eq permitted_params(input, { param_1: Any })
+
+    test_class = TestClass.new
+    input = { param_1: test_class, param_2: 2 }
+    output = { param_1: test_class }
+    expect(output).to eq permitted_params(input, { param_1: Any })
   end
 
   it 'should remove a string when a pemitted is integer' do

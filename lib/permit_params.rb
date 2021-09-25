@@ -11,10 +11,15 @@ module PermitParams
     coerced_params = Hash.new({})
 
     params.each do |key, value|
-      if permitted.keys.map(&:to_s).include?(key.to_s) && !value.nil?
-        coerced = coerce(value, permitted[key.to_sym], strong_validation, options)
-        coerced_params[key] = coerced unless coerced.nil?
-      end
+      next unless permitted.keys.map(&:to_s).include?(key.to_s) && !value.nil?
+
+      coerced = coerce(
+        param: value,
+        type: permitted[key.to_sym],
+        strong_validation: strong_validation,
+        options: options,
+      )
+      coerced_params[key] = coerced unless coerced.nil?
     end
     coerced_params
   end
@@ -24,7 +29,7 @@ module PermitParams
   Boolean = :boolean
   Any = :any
 
-  def coerce(param, type, strong_validation = false, options = {})
+  def coerce(param:, type:, strong_validation: false, options: {})
     return param if type == Any
 
     begin
@@ -44,6 +49,7 @@ module PermitParams
       raise InvalidParameterError, "'#{param}' is not a valid #{type}" if strong_validation
     end
   end
+
 
   def coerce_array(param, options = {})
     Array(param.split(options[:delimiter] || ',').map(&:strip))

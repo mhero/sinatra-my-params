@@ -17,7 +17,7 @@ module PermitParams
         param: value,
         type: permitted[key.to_sym],
         strong_validation: strong_validation,
-        options: options,
+        options: options
       )
       coerced_params[key] = coerced unless coerced.nil?
     end
@@ -35,7 +35,7 @@ module PermitParams
     begin
       return nil if param.nil?
       return param if (param.is_a?(type) rescue false)
-      return Integer(param, options[:integer_precision] || 10 ) if type == Integer
+      return coerce_integer(param, options) if type == Integer
       return Float(param) if type == Float
       return String(param) if type == String
       return Date.parse(param) if type == Date
@@ -50,6 +50,9 @@ module PermitParams
     end
   end
 
+  def coerce_integer(param, options = {})
+    Integer(param, options[:integer_precision] || 10)
+  end
 
   def coerce_array(param, options = {})
     Array(param.split(options[:delimiter] || ',').map(&:strip))

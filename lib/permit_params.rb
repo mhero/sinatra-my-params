@@ -1,17 +1,19 @@
+# frozen_string_literal: true
+
 module PermitParams
   class InvalidParameterError < StandardError
     attr_accessor :param, :options
   end
 
-  def permitted_params(params, permitted = {}, strong_validation = false)
+  def permitted_params(params, permitted = {}, strong_validation = false, options = {})
     return params if permitted.empty?
-  
+
     coerced_params = Hash.new({})
 
     params.each do |key, value|
       if permitted.keys.map(&:to_s).include?(key.to_s) && !value.nil?
-        coerced = coerce(value, permitted[key.to_sym], strong_validation)
-        coerced_params[key] = coerced if !coerced.nil?
+        coerced = coerce(value, permitted[key.to_sym], strong_validation, options)
+        coerced_params[key] = coerced unless coerced.nil?
       end
     end
     coerced_params
@@ -28,7 +30,7 @@ module PermitParams
     begin
       return nil if param.nil?
       return param if (param.is_a?(type) rescue false)
-      return Integer(param, 10) if type == Integer
+      return Integer(param, options[:integer_precision] || 10 ) if type == Integer
       return Float(param) if type == Float
       return String(param) if type == String
       return Date.parse(param) if type == Date
@@ -43,18 +45,25 @@ module PermitParams
     end
   end
 
-  def coerce_array(param)
-    Array(param.split(options[:delimiter] || ","))
+  def coerce_array(param, options = {})
+    Array(param.split(options[:delimiter] || ',').map(&:strip))
   end
 
-  def coerce_hash(param)
-    Hash[param.split(options[:delimiter] || ",").map{|c| c.split(options[:separator] || ":")}]
+  def coerce_hash(param, options = {})
+    key_value = param.split(options[:delimiter] || ',').map(&:strip).map do |c|
+      c.split(options[:separator] || ':').map(&:strip)
+    end
+    Hash[key_value]
   end
 
   def coerce_boolean(param)
-    coerced = /^(false|f|no|n|0)$/i === param.to_s ? false : /^(true|t|yes|y|1)$/i === param.to_s ? true : nil
+    coerced = if /^(false|f|no|n|0)$/i === param.to_s
+                false
+              else
+                /^(true|t|yes|y|1)$/i === param.to_s ? true : nil
+              end
     raise ArgumentError if coerced.nil?
+
     coerced
   end
 end
-

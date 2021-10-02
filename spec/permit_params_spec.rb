@@ -19,6 +19,28 @@ describe 'exceptions' do
     end.to raise_error(InvalidParameterError, "'a' is not a valid Integer")
   end
 
+  it 'should allow all params when no restriction is given' do
+    input = { param_1: 'a string' }
+    expect(input).to eq permitted_params(input)
+  end
+
+  it 'should remove a string when a pemitted is integer' do
+    input = { param_1: 'a string' }
+    output = {}
+    expect(output).to eq permitted_params(input, { param_1: Integer })
+  end
+
+  it 'should return an integer when a pemitted is integer' do
+    input = { param_1: 1 }
+    expect(input).to eq permitted_params(input, { param_1: Integer })
+  end
+
+  it 'should return an integer when a pemitted can be cast into integer' do
+    input = { param_1: '1' }
+    output = { param_1: 1 }
+    expect(output).to eq permitted_params(input, { param_1: Integer })
+  end
+
   it 'should return a string when a pemitted is string' do
     input = { param_1: 'a string' }
     expect(input).to eq permitted_params(input, { param_1: String })
@@ -37,17 +59,6 @@ describe 'exceptions' do
   it 'should return a time when a pemitted is time' do
     input = { param_1: Time.new }
     expect(input).to eq permitted_params(input, { param_1: Time })
-  end
-
-  it 'should return an integer when a pemitted is integer' do
-    input = { param_1: 1 }
-    expect(input).to eq permitted_params(input, { param_1: Integer })
-  end
-
-  it 'should return an integer when a pemitted can be cast into integer' do
-    input = { param_1: '1' }
-    output = { param_1: 1 }
-    expect(output).to eq permitted_params(input, { param_1: Integer })
   end
 
   it 'should return a false(boolean) when a pemitted is boolean' do
@@ -123,16 +134,5 @@ describe 'exceptions' do
     input = { param_1: test_class, param_2: 2 }
     output = { param_1: test_class }
     expect(output).to eq permitted_params(input, { param_1: Any })
-  end
-
-  it 'should remove a string when a pemitted is integer' do
-    input = { param_1: 'a string' }
-    output = {}
-    expect(output).to eq permitted_params(input, { param_1: Integer })
-  end
-
-  it 'should allow all params when no restriction is given' do
-    input = { param_1: 'a string' }
-    expect(input).to eq permitted_params(input)
   end
 end

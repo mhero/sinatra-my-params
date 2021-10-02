@@ -34,17 +34,22 @@ module PermitParams
 
     begin
       return nil if param.nil?
-      return param if (param.is_a?(type) rescue false)
+      return param if begin
+        param.is_a?(type)
+      rescue StandardError
+        false
+      end
       return coerce_integer(param, options) if type == Integer
       return Float(param) if type == Float
       return String(param) if type == String
       return Date.parse(param) if type == Date
       return Time.parse(param) if type == Time
       return DateTime.parse(param) if type == DateTime
-      return coerce_array(param) if type == Array
-      return coerce_hash(param) if type == Hash
+      return coerce_array(param, options) if type == Array
+      return coerce_hash(param, options) if type == Hash
       return coerce_boolean(param) if [TrueClass, FalseClass, Boolean].include? type
-      return nil
+
+      nil
     rescue ArgumentError
       raise InvalidParameterError, "'#{param}' is not a valid #{type}" if strong_validation
     end

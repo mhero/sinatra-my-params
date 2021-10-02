@@ -84,10 +84,22 @@ describe 'exceptions' do
     expect(output).to eq permitted_params(input, { param_1: Array })
   end
 
+  it 'should return an array when a pemitted is array' do
+    input = { param_1: '1; 2' }
+    output = { param_1: %w[1 2] }
+    expect(output).to eq permitted_params(input, { param_1: Array }, false, { delimiter: ';' })
+  end
+
   it 'should return a hash when a pemitted is hash' do
     input = { param_1: 'a: 1, b: 2' }
     output = { param_1: { 'a' => '1', 'b' => '2' } }
     expect(output).to eq permitted_params(input, { param_1: Hash })
+  end
+
+  it 'should return a hash when a pemitted is hash' do
+    input = { param_1: 'a: 1; b: 2' }
+    output = { param_1: { 'a' => '1', 'b' => '2' } }
+    expect(output).to eq permitted_params(input, { param_1: Hash }, false, { delimiter: ';' })
   end
 
   it 'should return a hash when a pemitted is hash' do

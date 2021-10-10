@@ -11,7 +11,7 @@ module PermitParams
     coerced_params = Hash.new({})
 
     params.each do |key, value|
-      next unless permitted.keys.map(&:to_s).include?(key.to_s) && !value.nil?
+      next unless permitted?(permitted: permitted, key: key, value: value)
 
       coerced = coerce(
         param: value,
@@ -28,6 +28,10 @@ module PermitParams
 
   Boolean = :boolean
   Any = :any
+
+  def permitted?(permitted:, key:, value:)
+    permitted.keys.map(&:to_s).include?(key.to_s) && !value.nil?
+  end
 
   def coerce(param:, type:, strong_validation: false, options: {})
     return param if type == Any

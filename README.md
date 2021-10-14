@@ -1,14 +1,63 @@
 # sinatra-my-params
-Check for sinatra params, either hard or soft check
+Check for your inputs params, both by name and type, either hard or soft check
 
-Basic usage
+## Method signature
 
 ```ruby
 permitted_params(params, permitted = {}, strong_validation = false)
 ```
 
-If strong_validation is set to true, method will rise an error; if not it will only ignore that param
+If strong_validation is set to true and the input parameter is not valid, method will rise an error. 
+If strong_validation is set to false and the input parameter is not valid, the parameter will be just ignored(removed).
 Parameters outside of permitted ones will be removed.
+
+## Example 1:
+
+```ruby
+input = { parameter: 'a string' }
+
+permitted_params(
+  input, { parameter: String }
+)
+```
+
+output
+```
+{ parameter: 'a string' }
+```
+
+## Example 2:
+
+```ruby
+input = { parameter: 'a string' }
+
+permitted_params(
+  input, { parameter: Integer }
+)
+```
+
+output
+```
+{ }
+```
+
+## Example 3:
+To ignore type
+
+```ruby
+input = { parameter: 'a string' }
+
+permitted_params(
+  input, { parameter: Any }
+)
+```
+
+output
+```
+{ parameter: 'a string' }
+```
+
+## Usage in class
 
 ```ruby
 class Controller 
@@ -16,7 +65,7 @@ class Controller
 
   get "/endpoint" do
     permitted_params = permitted_params(
-      params, { name: String }
+      params, { parameter: String }
     )
 
     ...
@@ -24,7 +73,7 @@ class Controller
 end
 ```
 
-# Permitted params
+## Permitted params types
   * Any
   * Boolean
   * Integer
@@ -38,5 +87,5 @@ end
   * TrueClass 
   * FalseClass
 
-All feedback is welcome. Super early stage
+All feedback is welcome.
 

@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new('>= 0') if s.respond_to? :required_rubygems_version=
   s.authors = ['Marco Aviles']
   s.date = '2021-09-19'
-  s.description = 'A simple sinatra params sanitizer'
+  s.description = 'A simple params sanitizer(originally created for sinatra)'
   s.email = 'gdmarav374@gmail.com'
   s.files = ['Rakefile', 'lib/permit_params.rb', 'bin/permit_params']
   s.test_files = ['spec/permit_params_spec.rb']

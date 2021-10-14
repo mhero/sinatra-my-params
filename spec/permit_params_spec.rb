@@ -8,10 +8,6 @@ require 'rack/test'
 include PermitParams
 
 describe 'exceptions' do
-  before do
-    class TestClass; end
-  end
-
   it 'should raise error when at least one param is invalid' do
     input = { param_1: 'a' }
     expect  do
@@ -133,18 +129,29 @@ describe 'exceptions' do
   end
 
   it 'returns the paramter without casting if Any' do
+    class TestClass
+      attr_accessor :some_attribute
+
+      def initialize(some_attribute: nil)
+        @some_attribute = some_attribute
+      end
+    end
+
     input = { param_1: '1' }
     output = { param_1: '1' }
     expect(output).to eq permitted_params(input, { param_1: Any })
 
-    test_class = TestClass.new
-    input = { param_1: test_class }
-    output = { param_1: test_class }
-    expect(output).to eq permitted_params(input, { param_1: Any })
+    input = {
+      param_1: TestClass.new(some_attribute: 'a string')
+    }
+    output = permitted_params(input, { param_1: Any })
+    expect(input[:param_1].some_attribute).to eq output[:param_1].some_attribute
 
-    test_class = TestClass.new
-    input = { param_1: test_class, param_2: 2 }
-    output = { param_1: test_class }
-    expect(output).to eq permitted_params(input, { param_1: Any })
+    input = {
+      param_1: TestClass.new(some_attribute: 1),
+      param_2: 2
+    }
+    output = permitted_params(input, { param_1: Any })
+    expect(input[:param_1].some_attribute).to eq output[:param_1].some_attribute
   end
 end

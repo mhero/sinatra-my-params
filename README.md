@@ -86,6 +86,7 @@ end
   * Hash
   * TrueClass 
   * FalseClass
+  * Shape(experimental hash shape)
 
 All feedback is welcome.
 

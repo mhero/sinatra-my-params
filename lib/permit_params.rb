@@ -28,6 +28,7 @@ module PermitParams
 
   Boolean = :boolean
   Any = :any
+  Shape = :shape
 
   def permitted?(permitted:, key:, value:)
     permitted.keys.map(&:to_s).include?(key.to_s) && !value.nil?
@@ -50,6 +51,7 @@ module PermitParams
       return Time.parse(param) if type == Time
       return DateTime.parse(param) if type == DateTime
       return coerce_array(param, options) if type == Array
+      return coerce_shape(param, options) if type == Shape
       return coerce_hash(param, options) if type == Hash
       return coerce_boolean(param) if [TrueClass, FalseClass, Boolean].include? type
 
@@ -68,6 +70,8 @@ module PermitParams
   end
 
   def coerce_hash(param, options = {})
+    return param if param.is_a?(Hash)
+
     key_value = param.split(options[:delimiter] || ',').map(&:strip).map do |c|
       c.split(options[:separator] || ':').map(&:strip)
     end
@@ -83,5 +87,16 @@ module PermitParams
     raise ArgumentError if coerced.nil?
 
     coerced
+  end
+
+  def coerce_shape(param, options = {})
+    hash = coerce_hash(param)
+    has_shape?(hash, options[:shape]) ? hash : nil
+  end
+
+  def has_shape?(hash, shape)
+    hash.all? do |k, v|
+      v.is_a?(Hash) ? has_shape?(v, shape[k]) : shape[k] === v
+    end
   end
 end

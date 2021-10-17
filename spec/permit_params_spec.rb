@@ -103,6 +103,36 @@ describe 'exceptions' do
     expect(input).to eq permitted_params(input, { param_1: Hash })
   end
 
+  it 'should return a hash when a pemitted is shape' do
+    input = { param_1: { a: 1, b: 2 } }
+    expect(input).to eq permitted_params(
+      input,
+      { param_1: Shape },
+      false,
+      { shape: { a: Integer, b: Integer } }
+    )
+  end
+
+  it 'should return a hash when a pemitted is shape(deep)' do
+    input = { param_1: { a: { b: 2 } } }
+    expect(input).to eq permitted_params(
+      input,
+      { param_1: Shape },
+      false,
+      { shape: { a: { b: Integer } } }
+    )
+  end
+
+  it 'should return a empty when a pemitted is shape not defined' do
+    input = { param_1: { a: 1, b: 2 } }
+    expect({}).to eq permitted_params(
+      input,
+      { param_1: Shape },
+      false,
+      { shape: { a: Integer } }
+    )
+  end
+
   it 'should return a hash when a pemitted is hash' do
     input = { param_1: { a: { b: 1 } } }
     expect(input).to eq permitted_params(input, { param_1: Hash })

@@ -74,7 +74,7 @@ end
 ```
 
 ## Permitted params types
-  * Any
+  * Any(no type check, only name check)
   * Boolean
   * Integer
   * Float 
@@ -86,7 +86,7 @@ end
   * Hash
   * TrueClass 
   * FalseClass
-  * Shape(experimental hash shape)
+  * Shape(experimental hash shape [more info in tests](https://github.com/mhero/sinatra-my-params/blob/main/spec/permit_params_shape_spec.rb))
 
 All feedback is welcome.
 

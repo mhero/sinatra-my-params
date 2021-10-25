@@ -7,140 +7,110 @@ require 'rack/test'
 
 include PermitParams
 
-describe 'exceptions' do
+describe 'behaviours' do
   it 'should raise error when at least one param is invalid' do
-    input = { param_1: 'a' }
+    input = { param: 'a' }
     expect  do
-      permitted_params(input, { param_1: Integer }, true)
+      permitted_params(input, { param: Integer }, true)
     end.to raise_error(InvalidParameterError, "'a' is not a valid Integer")
   end
 
   it 'should allow all params when no restriction is given' do
-    input = { param_1: 'a string' }
+    input = { param: 'a string' }
     expect(input).to eq permitted_params(input)
   end
 
   it 'should remove a string when a pemitted is integer' do
-    input = { param_1: 'a string' }
+    input = { param: 'a string' }
     output = {}
-    expect(output).to eq permitted_params(input, { param_1: Integer })
+    expect(output).to eq permitted_params(input, { param: Integer })
   end
 
   it 'should return an integer when a pemitted is integer' do
-    input = { param_1: 1 }
-    expect(input).to eq permitted_params(input, { param_1: Integer })
+    input = { param: 1 }
+    expect(input).to eq permitted_params(input, { param: Integer })
   end
 
   it 'should return an integer when a pemitted can be cast into integer' do
-    input = { param_1: '1' }
-    output = { param_1: 1 }
-    expect(output).to eq permitted_params(input, { param_1: Integer })
+    input = { param: '1' }
+    output = { param: 1 }
+    expect(output).to eq permitted_params(input, { param: Integer })
   end
 
   it 'should return a string when a pemitted is string' do
-    input = { param_1: 'a string' }
-    expect(input).to eq permitted_params(input, { param_1: String })
+    input = { param: 'a string' }
+    expect(input).to eq permitted_params(input, { param: String })
   end
 
   it 'should return a float when a pemitted is float' do
-    input = { param_1: 10.0 }
-    expect(input).to eq permitted_params(input, { param_1: Float })
+    input = { param: 10.0 }
+    expect(input).to eq permitted_params(input, { param: Float })
   end
 
   it 'should return a date when a pemitted is date' do
-    input = { param_1: Date.new }
-    expect(input).to eq permitted_params(input, { param_1: Date })
+    input = { param: Date.new }
+    expect(input).to eq permitted_params(input, { param: Date })
   end
 
   it 'should return a time when a pemitted is time' do
-    input = { param_1: Time.new }
-    expect(input).to eq permitted_params(input, { param_1: Time })
+    input = { param: Time.new }
+    expect(input).to eq permitted_params(input, { param: Time })
   end
 
   it 'should return a false(boolean) when a pemitted is boolean' do
-    input = { param_1: 'false' }
-    output = { param_1: false }
-    expect(output).to eq permitted_params(input, { param_1: Boolean })
+    input = { param: 'false' }
+    output = { param: false }
+    expect(output).to eq permitted_params(input, { param: Boolean })
   end
 
   it 'should return a true(boolean) when a pemitted is boolean' do
-    input = { param_1: 'true' }
-    output = { param_1: true }
-    expect(output).to eq permitted_params(input, { param_1: Boolean })
+    input = { param: 'true' }
+    output = { param: true }
+    expect(output).to eq permitted_params(input, { param: Boolean })
   end
 
   it 'should return an array when a pemitted is array' do
-    input = { param_1: [1, 2] }
-    expect(input).to eq permitted_params(input, { param_1: Array })
+    input = { param: [1, 2] }
+    expect(input).to eq permitted_params(input, { param: Array })
   end
 
   it 'should return an array when a pemitted is array' do
-    input = { param_1: '1, 2' }
-    output = { param_1: %w[1 2] }
-    expect(output).to eq permitted_params(input, { param_1: Array })
+    input = { param: '1, 2' }
+    output = { param: %w[1 2] }
+    expect(output).to eq permitted_params(input, { param: Array })
   end
 
   it 'should return an array when a pemitted is array' do
-    input = { param_1: '1; 2' }
-    output = { param_1: %w[1 2] }
-    expect(output).to eq permitted_params(input, { param_1: Array }, false, { delimiter: ';' })
+    input = { param: '1; 2' }
+    output = { param: %w[1 2] }
+    expect(output).to eq permitted_params(input, { param: Array }, false, { delimiter: ';' })
   end
 
   it 'should return a hash when a pemitted is hash' do
-    input = { param_1: 'a: 1, b: 2' }
-    output = { param_1: { 'a' => '1', 'b' => '2' } }
-    expect(output).to eq permitted_params(input, { param_1: Hash })
+    input = { param: 'a: 1, b: 2' }
+    output = { param: { 'a' => '1', 'b' => '2' } }
+    expect(output).to eq permitted_params(input, { param: Hash })
   end
 
   it 'should return a hash when a pemitted is hash' do
-    input = { param_1: 'a: 1; b: 2' }
-    output = { param_1: { 'a' => '1', 'b' => '2' } }
-    expect(output).to eq permitted_params(input, { param_1: Hash }, false, { delimiter: ';' })
+    input = { param: 'a: 1; b: 2' }
+    output = { param: { 'a' => '1', 'b' => '2' } }
+    expect(output).to eq permitted_params(input, { param: Hash }, false, { delimiter: ';' })
   end
 
   it 'should return a hash when a pemitted is hash' do
-    input = { param_1: { a: 1 } }
-    expect(input).to eq permitted_params(input, { param_1: Hash })
-  end
-
-  it 'should return a hash when a pemitted is shape' do
-    input = { param_1: { a: 1, b: 2 } }
-    expect(input).to eq permitted_params(
-      input,
-      { param_1: Shape },
-      false,
-      { shape: { a: Integer, b: Integer } }
-    )
-  end
-
-  it 'should return a hash when a pemitted is shape(deep)' do
-    input = { param_1: { a: { b: 2 } } }
-    expect(input).to eq permitted_params(
-      input,
-      { param_1: Shape },
-      false,
-      { shape: { a: { b: Integer } } }
-    )
-  end
-
-  it 'should return a empty when a pemitted is shape not defined' do
-    input = { param_1: { a: 1, b: 2 } }
-    expect({}).to eq permitted_params(
-      input,
-      { param_1: Shape },
-      false,
-      { shape: { a: Integer } }
-    )
+    input = { param: { a: 1 } }
+    expect(input).to eq permitted_params(input, { param: Hash })
   end
 
   it 'should return a hash when a pemitted is hash' do
-    input = { param_1: { a: { b: 1 } } }
-    expect(input).to eq permitted_params(input, { param_1: Hash })
+    input = { param: { a: { b: 1 } } }
+    expect(input).to eq permitted_params(input, { param: Hash })
   end
 
   it 'should return a hash when a pemitted is hash' do
-    input = { param_1: { "a": 1 } }
-    expect(input).to eq permitted_params(input, { param_1: Hash })
+    input = { param: { "a": 1 } }
+    expect(input).to eq permitted_params(input, { param: Hash })
   end
 
   it 'should return a several types for several inputs' do
@@ -167,21 +137,21 @@ describe 'exceptions' do
       end
     end
 
-    input = { param_1: '1' }
-    output = { param_1: '1' }
-    expect(output).to eq permitted_params(input, { param_1: Any })
+    input = { param: '1' }
+    output = { param: '1' }
+    expect(output).to eq permitted_params(input, { param: Any })
 
     input = {
-      param_1: TestClass.new(some_attribute: 'a string')
+      param: TestClass.new(some_attribute: 'a string')
     }
-    output = permitted_params(input, { param_1: Any })
-    expect(input[:param_1].some_attribute).to eq output[:param_1].some_attribute
+    output = permitted_params(input, { param: Any })
+    expect(input[:param].some_attribute).to eq output[:param].some_attribute
 
     input = {
-      param_1: TestClass.new(some_attribute: 1),
-      param_2: 2
+      param: TestClass.new(some_attribute: 1),
+      antoher_param: 2
     }
-    output = permitted_params(input, { param_1: Any })
-    expect(input[:param_1].some_attribute).to eq output[:param_1].some_attribute
+    output = permitted_params(input, { param: Any })
+    expect(input[:param].some_attribute).to eq output[:param].some_attribute
   end
 end

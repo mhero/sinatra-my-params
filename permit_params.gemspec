@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.description = 'A simple params sanitizer(originally created for sinatra)'
   s.email = 'gdmarav374@gmail.com'
   s.files = ['Rakefile', 'lib/permit_params.rb', 'bin/permit_params']
-  s.test_files = ['spec/permit_params_spec.rb']
+  s.test_files = ['spec/permit_params_spec.rb', 'spec/permit_params_shape_spec.rb']
   s.homepage = 'https://github.com/mhero/sinatra-my-params'
   s.require_paths = ['lib']
   s.rubygems_version = '1.6.2'

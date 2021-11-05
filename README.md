@@ -78,7 +78,7 @@ end
   * Boolean
   * Integer
   * Float 
-  * String,
+  * String
   * Date
   * Time
   * DateTime
@@ -86,7 +86,7 @@ end
   * Hash
   * TrueClass 
   * FalseClass
-  * Shape(experimental hash shape [more info in tests](https://github.com/mhero/sinatra-my-params/blob/main/spec/permit_params_shape_spec.rb))
+  * Shape(experimental hash shape). [More info in tests](https://github.com/mhero/sinatra-my-params/blob/main/spec/permit_params_shape_spec.rb)
 
 All feedback is welcome.
 

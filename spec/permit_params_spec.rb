@@ -20,119 +20,113 @@ describe 'behaviours' do
     expect(input).to eq permitted_params(input)
   end
 
-  it 'should remove a string when a pemitted is integer' do
+  it 'should remove a string when permitted param is integer' do
     input = { param: 'a string' }
     output = {}
     expect(output).to eq permitted_params(input, { param: Integer })
   end
 
-  it 'should return an integer when a pemitted is integer' do
+  it 'should return an integer when permitted param is integer' do
     input = { param: 1 }
     expect(input).to eq permitted_params(input, { param: Integer })
   end
 
-  it 'should return an integer when a pemitted can be cast into integer' do
+  it 'should return an integer when permitted param can be cast into integer' do
     input = { param: '1' }
     output = { param: 1 }
     expect(output).to eq permitted_params(input, { param: Integer })
   end
 
-  it 'should return a string when a pemitted is string' do
+  it 'should return a string when permitted param is string' do
     input = { param: 'a string' }
     expect(input).to eq permitted_params(input, { param: String })
   end
 
-  it 'should return a float when a pemitted is float' do
+  it 'should return a float when permitted param is float' do
     input = { param: 10.0 }
     expect(input).to eq permitted_params(input, { param: Float })
   end
 
-  it 'should return a date when a pemitted is date' do
+  it 'should return a date when permitted param is date' do
     input = { param: Date.new }
     expect(input).to eq permitted_params(input, { param: Date })
   end
 
-  it 'should return a time when a pemitted is time' do
+  it 'should return a time when permitted param is time' do
     input = { param: Time.new }
     expect(input).to eq permitted_params(input, { param: Time })
   end
 
-  it 'should return a false(boolean) when a pemitted is boolean' do
+  it 'should return a false(boolean) when permitted param is boolean' do
     input = { param: 'false' }
     output = { param: false }
     expect(output).to eq permitted_params(input, { param: Boolean })
   end
 
-  it 'should return a true(boolean) when a pemitted is boolean' do
+  it 'should return a true(boolean) when permitted param is boolean' do
     input = { param: 'true' }
     output = { param: true }
     expect(output).to eq permitted_params(input, { param: Boolean })
   end
 
-  it 'should return an array when a pemitted is array' do
+  it 'should return an array when permitted param is array' do
     input = { param: [1, 2] }
     expect(input).to eq permitted_params(input, { param: Array })
   end
 
-  it 'should return an array when a pemitted is array' do
+  it 'should return an array when permitted param is array' do
     input = { param: '1, 2' }
     output = { param: %w[1 2] }
     expect(output).to eq permitted_params(input, { param: Array })
   end
 
-  it 'should return an array when a pemitted is array' do
+  it 'should return an array when permitted param is array' do
     input = { param: '1; 2' }
     output = { param: %w[1 2] }
     expect(output).to eq permitted_params(input, { param: Array }, false, { delimiter: ';' })
   end
 
-  it 'should return an empty hash when a pemitted is array with wrong delimiter' do
+  it 'should return an empty hash when permitted param is array with wrong delimiter' do
     input = { param: '1; 2' }
     output = {}
     expect(output).to eq permitted_params(input, { param: Array }, false, { delimiter: ',' })
   end
 
-  it 'should return a hash when a pemitted is hash' do
+  it 'should return a hash when permitted param is hash' do
     input = { param: 'a: 1, b: 2' }
     output = { param: { 'a' => '1', 'b' => '2' } }
     expect(output).to eq permitted_params(input, { param: Hash })
   end
 
-  it 'should return a hash when a pemitted is hash' do
+  it 'should return a hash when permitted param is hash' do
     input = { param: 'a: 1; b: 2' }
     output = { param: { 'a' => '1', 'b' => '2' } }
     expect(output).to eq permitted_params(input, { param: Hash }, false, { delimiter: ';' })
   end
 
-  it 'should return an empty hash when a pemitted is hash' do
+  it 'should return an empty hash when permitted param is hash with wrong separator' do
     input = { param: 'a: 1; b: 2' }
     output = {}
     expect(output).to eq permitted_params(input, { param: Hash }, false, { separator: '.' })
   end
 
-  it 'should return an empty hash when a pemitted is hash' do
+  it 'should return an empty hash when permitted param is hash with wrong delimiter' do
     input = { param: 'a: 1; b: 2' }
     output = {}
     expect(output).to eq permitted_params(input, { param: Hash }, false, { delimiter: ',' })
   end
 
-  it 'should return an empty hash when a pemitted is hash' do
-    input = { param: 'a: 1; b: 2' }
-    output = {}
-    expect(output).to eq permitted_params(input, { param: Hash }, false, { delimiter: ',' })
-  end
-
-  it 'should return a hash when a pemitted is hash' do
+  it 'should return a hash when permitted param is hash' do
     input = { param: { a: 1 } }
     expect(input).to eq permitted_params(input, { param: Hash })
   end
 
-  it 'should return a hash when a pemitted is hash' do
+  it 'should return a hash when permitted param is hash' do
     input = { param: { a: { b: 1 } } }
     expect(input).to eq permitted_params(input, { param: Hash })
   end
 
-  it 'should return a hash when a pemitted is hash' do
+  it 'should return a hash when permitted param is hash' do
     input = { param: { "a": 1 } }
     expect(input).to eq permitted_params(input, { param: Hash })
   end

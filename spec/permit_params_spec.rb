@@ -86,6 +86,12 @@ describe 'behaviours' do
     expect(output).to eq permitted_params(input, { param: Array }, false, { delimiter: ';' })
   end
 
+  it 'should return an empty hash when a pemitted is array with wrong delimiter' do
+    input = { param: '1; 2' }
+    output = {}
+    expect(output).to eq permitted_params(input, { param: Array }, false, { delimiter: ',' })
+  end
+
   it 'should return a hash when a pemitted is hash' do
     input = { param: 'a: 1, b: 2' }
     output = { param: { 'a' => '1', 'b' => '2' } }
@@ -96,6 +102,24 @@ describe 'behaviours' do
     input = { param: 'a: 1; b: 2' }
     output = { param: { 'a' => '1', 'b' => '2' } }
     expect(output).to eq permitted_params(input, { param: Hash }, false, { delimiter: ';' })
+  end
+
+  it 'should return an empty hash when a pemitted is hash' do
+    input = { param: 'a: 1; b: 2' }
+    output = {}
+    expect(output).to eq permitted_params(input, { param: Hash }, false, { separator: '.' })
+  end
+
+  it 'should return an empty hash when a pemitted is hash' do
+    input = { param: 'a: 1; b: 2' }
+    output = {}
+    expect(output).to eq permitted_params(input, { param: Hash }, false, { delimiter: ',' })
+  end
+
+  it 'should return an empty hash when a pemitted is hash' do
+    input = { param: 'a: 1; b: 2' }
+    output = {}
+    expect(output).to eq permitted_params(input, { param: Hash }, false, { delimiter: ',' })
   end
 
   it 'should return a hash when a pemitted is hash' do

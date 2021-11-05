@@ -66,14 +66,23 @@ module PermitParams
   end
 
   def coerce_array(param, options = {})
-    Array(param.split(options[:delimiter] || ',').map(&:strip))
+    delimiter = correct_delimiter?(param, options[:delimiter])
+    return unless delimiter
+
+    Array(param.split(delimiter).map(&:strip))
   end
 
   def coerce_hash(param, options = {})
     return param if param.is_a?(Hash)
 
-    key_value = param.split(options[:delimiter] || ',').map(&:strip).map do |c|
-      c.split(options[:separator] || ':').map(&:strip)
+    delimiter =  correct_delimiter?(param, options[:delimiter])
+    return unless delimiter
+
+    separator = correct_separator?(param, options[:separator])
+    return unless separator
+
+    key_value = param.split(delimiter).map(&:strip).map do |c|
+      c.split(separator).map(&:strip)
     end
     Hash[key_value]
   end
@@ -87,6 +96,16 @@ module PermitParams
     raise ArgumentError if coerced.nil?
 
     coerced
+  end
+
+  def correct_delimiter?(param, delimiter)
+    delimiter ||= ','
+    delimiter if delimiter && param.include?(delimiter)
+  end
+
+  def correct_separator?(param, separator)
+    separator ||= ':'
+    separator if separator && param.include?(separator)
   end
 
   def coerce_shape(param, options = {})

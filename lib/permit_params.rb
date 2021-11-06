@@ -66,7 +66,7 @@ module PermitParams
   end
 
   def coerce_array(param, options = {})
-    delimiter = correct_delimiter?(param, options[:delimiter])
+    delimiter = valid_delimiter?(param, options[:delimiter])
     return unless delimiter
 
     Array(param.split(delimiter).map(&:strip))
@@ -75,10 +75,10 @@ module PermitParams
   def coerce_hash(param, options = {})
     return param if param.is_a?(Hash)
 
-    delimiter =  correct_delimiter?(param, options[:delimiter])
+    delimiter =  valid_delimiter?(param, options[:delimiter])
     return unless delimiter
 
-    separator = correct_separator?(param, options[:separator])
+    separator = valid_separator?(param, options[:separator])
     return unless separator
 
     key_value = param.split(delimiter).map(&:strip).map do |c|
@@ -98,12 +98,12 @@ module PermitParams
     coerced
   end
 
-  def correct_delimiter?(param, delimiter)
+  def valid_delimiter?(param, delimiter)
     delimiter ||= ','
     delimiter if delimiter && param.include?(delimiter)
   end
 
-  def correct_separator?(param, separator)
+  def valid_separator?(param, separator)
     separator ||= ':'
     separator if separator && param.include?(separator)
   end

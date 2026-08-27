@@ -1,13 +1,5 @@
-require "rake/testtask"
 require "rspec/core/rake_task"
 
-Rake::TestTask.new do |t|
-  t.libs << "test"
-end
+RSpec::Core::RakeTask.new(:spec)
 
-begin
-  RSpec::Core::RakeTask.new(:spec)
-
-  task :default => :spec
-rescue LoadError
-end
+task :default => :spec

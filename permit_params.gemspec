@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new('>= 0') if s.respond_to? :required_rubygems_version=
   s.authors = ['Marco Aviles']
-  s.date = '2021-09-19'
+  s.date = '2026-08-27'
   s.description = 'A simple params sanitizer (originally created for sinatra)'
   s.email = 'gdmarav374@gmail.com'
   s.files = ['Rakefile', 'lib/permit_params.rb', 'bin/permit_params']
@@ -16,6 +16,11 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
   s.rubygems_version = '1.6.2'
   s.summary = 'permit_params!'
+  s.required_ruby_version = '>= 2.6'
+
+  s.add_development_dependency 'rack-test', '~> 2.1'
+  s.add_development_dependency 'rake', '~> 13.0'
+  s.add_development_dependency 'rspec', '~> 3.12'
 
   if s.respond_to? :specification_version
     s.specification_version = 3

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'test/unit'
 require 'permit_params'
 require 'rspec'
 require 'rack/test'

@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'date'
+require 'time'
+
 module PermitParams
   class InvalidParameterError < StandardError
     attr_accessor :param, :options
@@ -8,7 +11,7 @@ module PermitParams
   def permitted_params(params, permitted = {}, strong_validation = false, options = {})
     return params if permitted.empty?
 
-    coerced_params = Hash.new({})
+    coerced_params = {}
 
     params.each do |key, value|
       next unless permitted?(permitted: permitted, key: key, value: value)
@@ -30,6 +33,14 @@ module PermitParams
   Any = :any
   Shape = :shape
 
+  # Mirrors the fix Ruby itself shipped for CVE-2021-41817 (ReDoS in
+  # Date/Time/DateTime parsing methods): never hand an unbounded,
+  # attacker-controlled string to a parser that uses backtracking regexes.
+  PARSE_LENGTH_LIMIT = 128
+
+  DATE_TIME_TYPES = [Date, Time, DateTime].freeze
+  NUMERIC_PARSE_TYPES = [Integer, Float].freeze
+
   def permitted?(permitted:, key:, value:)
     permitted.keys.map(&:to_s).include?(key.to_s) && !value.nil?
   end
@@ -44,6 +55,11 @@ module PermitParams
       rescue StandardError
         false
       end
+
+      if param.is_a?(String) && (DATE_TIME_TYPES.include?(type) || NUMERIC_PARSE_TYPES.include?(type))
+        raise ArgumentError, "'#{type}' input exceeds #{PARSE_LENGTH_LIMIT} bytes" if param.bytesize > PARSE_LENGTH_LIMIT
+      end
+
       return coerce_integer(param, options) if type == Integer
       return Float(param) if type == Float
       return String(param) if type == String
@@ -56,8 +72,14 @@ module PermitParams
       return coerce_boolean(param) if [TrueClass, FalseClass, Boolean].include? type
 
       nil
-    rescue ArgumentError
+    rescue StandardError
+      # Any failure while coercing untrusted input (malformed value,
+      # unexpected nested shape, missing stdlib constant, etc.) must never
+      # crash the caller's request handler - it's either rejected loudly
+      # (strong_validation) or dropped silently, same as an invalid value.
       raise InvalidParameterError, "'#{param}' is not a valid #{type}" if strong_validation
+
+      nil
     end
   end
 
@@ -88,10 +110,13 @@ module PermitParams
   end
 
   def coerce_boolean(param)
-    coerced = if /^(false|f|no|n|0)$/i === param.to_s
+    # \A/\z (not ^/$) anchor to the start/end of the *whole string*. In Ruby
+    # ^ and $ only anchor to line boundaries, so e.g. "true\nDROP TABLE..."
+    # would incorrectly match as a clean boolean with ^/$.
+    coerced = if /\A(false|f|no|n|0)\z/i === param.to_s
                 false
               else
-                /^(true|t|yes|y|1)$/i === param.to_s ? true : nil
+                /\A(true|t|yes|y|1)\z/i === param.to_s ? true : nil
               end
     raise ArgumentError if coerced.nil?
 
@@ -109,11 +134,18 @@ module PermitParams
   end
 
   def coerce_shape(param, options = {})
-    hash = coerce_hash(param)
+    hash = coerce_hash(param, options)
     has_shape?(hash, options[:shape]) ? hash : nil
   end
 
   def has_shape?(hash, shape)
+    # `hash` can be nil (coerce_hash gave up on a malformed string) and
+    # `shape` can be nil/non-Hash (caller forgot to pass shape:, or an
+    # attacker sent an unexpected nested hash the shape never described).
+    # Either used to raise NoMethodError deep inside a supposedly "safe"
+    # input filter, crashing the whole request. Reject instead of raising.
+    return false unless hash.is_a?(Hash) && shape.is_a?(Hash)
+
     hash.all? do |k, v|
       v.is_a?(Hash) ? has_shape?(v, shape[k]) : shape[k] === v
     end
